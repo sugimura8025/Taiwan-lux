@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TAIWAN EXCLUSIVE JOURNEY</title>
+  
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Taiwan Luxury Trip","short_name":"Taiwan Trip","display":"standalone","background_color":"#EFE9E1","theme_color":"#1A292F","start_url":"."}'>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;600&family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans:,
+            serif:,
+          },
+          colors: {
+            luxury: {
+              base: '#EFE9E1',     // Warm Ivory/Cream
+              ink: '#1A292F',      // Deep Navy/Charcoal
+              accent: '#DEBDA6',   // Warm Taupe
+              surface: 'rgba(255, 255, 255, 0.45)', // Glass base
+              border: 'rgba(255, 255, 255, 0.4)'
+            }
+          },
+          boxShadow: {
+            'glass': '0 8px 32px rgba(0, 0, 0, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+   .no-scrollbar::-webkit-scrollbar { display: none; }
+   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+   .timeline-line::before {
+      content: '';
+      position: absolute;
+      top: 24px; bottom: -24px; left: 24px;
+      width: 1px;
+      background: #DEBDA6;
+      opacity: 0.5;
+      z-index: 0;
+    }
+   .timeline-item:last-child.timeline-line::before { display: none; }
+    
+   .timeline-dash::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 24px;
+      width: 1px;
+      background-image: linear-gradient(to bottom, #DEBDA6 50%, transparent 50%);
+      background-size: 1px 8px;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+   .checklist-input:checked + span {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="bg-luxury-base text-luxury-ink font-sans antialiased selection:bg-luxury-accent selection:text-white" x-data="tripApp()">
+
+  <header class="bg-white/40 backdrop-blur-xl px-6 py-4 sticky top-0 z-30 flex justify-center items-center gap-2 border-b border-white/50 shadow-sm">
+    <h1 class="text-xl font-serif font-bold tracking-widest text-luxury-ink text-center uppercase">Taiwan Itinerary</h1>
+  </header>
+
+  <nav class="bg-white/30 backdrop-blur-md sticky top-[61px] z-20 flex overflow-x-auto no-scrollbar border-b border-luxury-border shadow-sm">
+    <template x-for="(day, index) in itinerary" :key="index">
+      <button 
+        @click="activeTab = index; window.scrollTo({top: 0, behavior: 'smooth'})" 
+        class="flex-none min-w-[80px] px-2 py-3 text-center transition-all duration-500 relative border-b-2"
+        :class="activeTab === index? 'text-luxury-ink border-luxury-ink' : 'text-luxury-ink/40 border-transparent'">
+        <template x-if="day.isHello">
+          <div>
+            <i class="ph ph-sparkle text-xl mb-1"></i>
+            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Top</div>
+          </div>
+        </template>
+        <template x-if="day.isInfo">
+          <div>
+            <i class="ph ph-info text-xl mb-1"></i>
+            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Info</div>
+          </div>
+        </template>
+        <template x-if="day.isTools">
+          <div>
+            <i class="ph ph-toolbox text-xl mb-1"></i>
+            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Tools</div>
+          </div>
+        </template>
+        <template x-if="!day.isHello &&!day.isInfo &&!day.isTools">
+          <div>
+            <div class="font-serif text-lg font-bold leading-tight" x-text="day.date"></div>
+            <div class="text-[10px] font-bold mt-0.5 tracking-wider" x-text="day.area"></div>
+          </div>
+        </template>
+      </button>
+    </template>
+  </nav>
+
+  <main class="p-5 pb-32 max-w-lg mx-auto min-h-screen">
+    
+    <template x-if="itinerary.isHello">
+      <div class="h-[75vh] flex flex-col items-center justify-center text-center px-4 relative rounded-3xl overflow-hidden shadow-2xl mt-2 border border-white/20">
+        
+        <div x-data="{ slide: 0 }" x-init="setInterval(() => { slide = slide === 0? 1 : 0 }, 4000)" class="absolute inset-0 w-full h-full">
+          <img src="https://www.veltra.com/jp/guide/wp-content/uploads/2023/10/pixta_88320344_M.jpg" 
+               class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out" 
+               :class="slide === 0? 'opacity-100' : 'opacity-0'">
+          <img src="https://www.arukikata.co.jp/wp-content/uploads/20230209132106f3c208001920.jpg" 
+               class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out" 
+               :class="slide === 1? 'opacity-100' : 'opacity-0'">
+          <div class="absolute inset-0 bg-gradient-to-b from-luxury-ink/30 via-luxury-ink/40 to-luxury-ink/90 z-0"></div>
+        </div>
+        
+        <div class="relative z-10 text-white flex flex-col items-center w-full px-4">
+          <p class="text-xs tracking-[0.4em] mb-4 font-light text-luxury-accent">EXCLUSIVE JOURNEY</p>
+          <h2 class="text-5xl font-serif font-bold mb-6 tracking-widest drop-shadow-md">TAIWAN</h2>
+          <div class="h-px w-12 bg-luxury-accent mb-6"></div>
+          <p class="text-sm tracking-[0.2em] mb-12 font-light">2026.4.2 - 4.7</p>
+          
+          <p class="text-[10px] mb-12 font-medium tracking-[0.2em] bg-black/30 px-6 py-3 rounded-full backdrop-blur-md border border-white/10 uppercase">
+            Naoto Sugimura & Tomohiro Eguchi
+          </p>
+          
+          <button @click="activeTab = 1; window.scrollTo({top: 0, behavior: 'smooth'})" 
+                  class="flex items-center gap-3 bg-white text-luxury-ink font-serif italic tracking-wider px-8 py-3.5 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform">
+            <span>Explore Itinerary</span>
+            <i class="ph ph-arrow-right text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="!itinerary.isInfo &&!itinerary.isHello &&!itinerary.isTools">
+      <div class="animate-fade-in">
+        <div class="mb-6 flex justify-end" x-show="itinerary.routeUrl" x-transition>
+          <a :href="itinerary.routeUrl" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full shadow-glass bg-luxury-surface backdrop-blur-md border border-luxury-border cursor-pointer active:scale-95 transition-transform text-luxury-ink hover:bg-white/60">
+            <i class="ph ph-map-trifold text-lg"></i>
+            <span class="text-xs font-bold tracking-wider">Open Route Map</span>
+          </a>
+        </div>
+
+        <div class="relative mt-4">
+          <template x-for="(spot, spotIndex) in itinerary.spots" :key="spotIndex">
+            <div>
+              <template x-if="spot.transit">
+                <div class="relative pl-16 py-4">
+                  <div class="timeline-dash"></div>
+                  <div class="text-[10px] font-bold tracking-widest text-luxury-ink/60 bg-luxury-base inline-block px-2 rounded-full relative z-10 py-1">
+                    <i class="ph ph-arrows-down-up align-middle mr-1"></i> <span x-text="spot.transit"></span>
+                  </div>
+                </div>
+              </template>
+
+              <div x-show="!spot.transit" class="timeline-item relative pl-16 mb-6">
+                <div class="timeline-line absolute left-0 top-0 bottom-0 w-12 flex flex-col items-center">
+                  <div class="w-12 text-right pr-3 pt-1.5">
+                    <span class="text-[11px] font-bold text-luxury-ink/70 tracking-widest" x-text="spot.time |
+
+| ''"></span>
+                  </div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-luxury-accent absolute top-2.5 left-[23px] z-10 shadow-sm ring-4 ring-luxury-base"></div>
+                </div>
+
+                <div @click="openModal(spot)" class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 shadow-glass cursor-pointer active:scale-95 transition-all hover:bg-white/50">
+                  <h3 class="font-serif text-xl font-bold mb-2 text-luxury-ink" x-text="spot.name"></h3>
+                  <p class="text-xs text-luxury-ink/80 leading-relaxed line-clamp-2 tracking-wide" x-text="spot.desc"></p>
+                  
+                  <div class="mt-4 h-32 rounded-xl overflow-hidden relative bg-gray-200">
+                    <img :src="spot.image" class="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105" alt="">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end justify-end p-3">
+                      <span class="text-white text-[10px] tracking-widest font-medium uppercase drop-shadow-md">Tap to View <i class="ph ph-arrow-right inline-block ml-1"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="itinerary.isInfo">
+      <div class="space-y-6 mt-2 animate-fade-in">
+        
+        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden">
+          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center gap-2">
+            <i class="ph ph-buildings text-lg text-luxury-accent"></i>
+            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-sm uppercase">Hotel</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-[11px] text-luxury-ink/60 mb-2 tracking-wide uppercase">2026.4.2 - 4.7 (5 Nights) / Classic Twin</p>
+            <h4 class="font-serif font-bold text-2xl text-luxury-ink mb-6">Guide Hotel Taipei Bade</h4>
+            
+            <div class="bg-white/50 border border-luxury-border rounded-xl p-5 relative mb-6">
+              <p class="text-xl font-bold text-luxury-ink text-center tracking-widest mb-1">承携行旅 台北八徳館</p>
+              <p class="text-xs text-luxury-ink/70 text-center tracking-wider">台北市松山區八德路四段16号</p>
+            </div>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=承携行旅+台北八徳館" target="_blank" rel="noopener noreferrer" 
+               class="flex justify-center items-center gap-2 bg-luxury-ink text-white font-medium tracking-widest text-xs py-3.5 px-4 rounded-full shadow-md hover:bg-luxury-ink/90 transition-colors w-full active:scale-95">
+              <i class="ph ph-map-pin text-lg"></i>
+              <span>View on Google Map</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden">
+          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center gap-2">
+            <i class="ph ph-airplane-tilt text-lg text-luxury-accent"></i>
+            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-sm uppercase">Flight</h3>
+          </div>
+          <div class="p-6 space-y-6">
+            <p class="text-[10px] font-bold text-luxury-ink tracking-widest uppercase bg-white/40 p-2.5 rounded-lg border border-luxury-border text-center">
+              <i class="ph ph-users align-middle mr-1"></i> Sugimura N. / Eguchi T.
+            </p>
+            
+            <div class="relative pl-4 border-l border-luxury-accent">
+              <p class="text-[10px] font-bold text-luxury-accent tracking-widest mb-2 uppercase">Departure • Apr 2 (Thu) • Scoot TR877</p>
+              <div class="flex items-center gap-4">
+                <div>
+                  <p class="text-2xl font-serif font-bold text-luxury-ink">12:30</p>
+                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">NRT T1</p>
+                </div>
+                <div class="flex-1 border-b border-dashed border-luxury-ink/30 relative">
+                  <i class="ph ph-airplane text-luxury-ink/40 absolute -top-2.5 right-1/2 translate-x-1/2"></i>
+                </div>
+                <div class="text-right">
+                  <p class="text-2xl font-serif font-bold text-luxury-ink">15:10</p>
+                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">TPE T1</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative pl-4 border-l border-luxury-accent">
+              <p class="text-[10px] font-bold text-luxury-accent tracking-widest mb-2 uppercase">Return • Apr 7 (Tue) • Scoot TR874</p>
+              <div class="flex items-center gap-4">
+                <div>
+                  <p class="text-2xl font-serif font-bold text-luxury-ink">15:30</p>
+                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">TPE T1</p>
+                </div>
+                <div class="flex-1 border-b border-dashed border-luxury-ink/30 relative">
+                  <i class="ph ph-airplane text-luxury-ink/40 absolute -top-2.5 right-1/2 translate-x-1/2"></i>
+                </div>
+                <div class="text-right">
+                  <p class="text-2xl font-serif font-bold text-luxury-ink">20:00</p>
+                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">NRT T1</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="itinerary.isTools">
+      <div class="space-y-5 mt-2 animate-fade-in">
+        
+        <div class="grid grid-cols-2 gap-4">
+          <a href="https://tenki.jp/world/5/88/58968/" target="_blank" rel="noopener noreferrer" 
+             class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 flex flex-col items-center justify-center gap-3 shadow-glass hover:bg-white/50 transition-colors active:scale-95 text-center">
+            <i class="ph ph-cloud-sun text-3xl text-luxury-accent"></i>
+            <span class="text-[11px] font-bold tracking-widest uppercase text-luxury-ink">Weather<br>(Taipei)</span>
+          </a>
+          <a href="https://www.deepl.com/ja/translator#ja/zh-hant/" target="_blank" rel="noopener noreferrer" 
+             class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 flex flex-col items-center justify-center gap-3 shadow-glass hover:bg-white/50 transition-colors active:scale-95 text-center">
+            <i class="ph ph-translate text-3xl text-luxury-accent"></i>
+            <span class="text-[11px] font-bold tracking-widest uppercase text-luxury-ink">Translator<br>(DeepL)</span>
+          </a>
+        </div>
+
+        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden" x-data="currencyConverter()" x-init="fetchRate()">
+          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex justify-between items-center">
+            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase"><i class="ph ph-currency-circle-dollar mr-1 align-text-bottom"></i> Exchange</h3>
+            <span class="text-[10px] font-medium tracking-wider text-luxury-ink/60" x-text="'1 TWD = ' + rate.toFixed(2) + ' JPY'"></span>
+          </div>
+          
+          <div class="p-5 flex flex-col gap-4">
+            <div class="relative w-full">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <span class="text-luxury-ink/50 font-bold text-lg">NT$</span>
+              </div>
+              <input type="number" x-model="twd" @input="calcJpy()" class="bg-white/60 border border-luxury-border text-luxury-ink text-xl rounded-xl focus:ring-luxury-accent focus:border-luxury-accent block w-full pl-16 py-3 pr-4 text-right font-serif font-bold outline-none transition-all" placeholder="0">
+            </div>
+            
+            <div class="flex justify-center text-luxury-accent -my-1">
+              <i class="ph ph-arrows-down-up text-xl"></i>
+            </div>
+            
+            <div class="relative w-full">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <span class="text-luxury-ink/50 font-bold text-lg">¥</span>
+              </div>
+              <input type="number" x-model="jpy" @input="calcTwd()" class="bg-white/60 border border-luxury-border text-luxury-ink text-xl rounded-xl focus:ring-luxury-accent focus:border-luxury-accent block w-full pl-12 py-3 pr-4 text-right font-serif font-bold outline-none transition-all" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden" x-data="memoBoard()">
+          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center justify-between">
+            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase flex items-center gap-1.5">
+              <i class="ph ph-note-pencil text-lg text-luxury-accent"></i> Shared Notes
+            </h3>
+            <span class="flex h-2 w-2 relative">
+              <span x-show="isSynced" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-accent opacity-75"></span>
+              <span x-show="isSynced" class="relative inline-flex rounded-full h-2 w-2 bg-luxury-accent"></span>
+              <span x-show="!isSynced" class="relative inline-flex rounded-full h-2 w-2 bg-gray-400"></span>
+            </span>
+          </div>
+          <div class="p-5">
+            <div class="flex gap-2 mb-5">
+              <textarea x-model="newMemo" rows="2" class="flex-1 bg-white/60 border border-luxury-border text-sm text-luxury-ink rounded-xl p-3 outline-none focus:border-luxury-accent transition-all" placeholder="Share thoughts or plans..."></textarea>
+              <button @click="addMemo()" class="bg-luxury-ink text-white font-medium tracking-widest text-xs uppercase px-4 rounded-xl hover:bg-luxury-ink/90 active:scale-95 transition-all">
+                Post
+              </button>
+            </div>
+            
+            <div class="space-y-3">
+              <template x-for="memo in memos" :key="memo.id">
+                <div class="bg-white/50 border border-luxury-border p-4 rounded-xl shadow-sm relative group">
+                  <p class="text-sm text-luxury-ink whitespace-pre-wrap leading-relaxed" x-text="memo.text"></p>
+                  <div class="mt-3 flex justify-between items-end">
+                    <span class="text-[9px] text-luxury-ink/50 tracking-widest uppercase" x-text="memo.date"></span>
+                    <button @click="deleteMemo(memo.id)" class="text-luxury-ink/30 hover:text-luxury-accent transition-colors">
+                      <i class="ph ph-trash text-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+  </main>
+
+  <div x-show="isModalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-end justify-center bg-luxury-ink/60 backdrop-blur-sm" x-transition.opacity x-data="{ taxiMode: false, copied: false }">
+    <div @click.away="!taxiMode? closeModal() : null" class="bg-luxury-base w-full rounded-t-[2rem] overflow-hidden h-[85vh] flex flex-col shadow-2xl relative"
+         x-transition:enter="transition ease-out duration-400"
+         x-transition:enter-start="transform translate-y-full"
+         x-transition:enter-end="transform translate-y-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="transform translate-y-0"
+         x-transition:leave-end="transform translate-y-full">
+      
+      <div class="flex-1 flex flex-col overflow-hidden" x-show="!taxiMode" x-transition.opacity>
+        <div class="relative h-64 bg-gray-200 shrink-0">
+          <img :src="currentSpot.image" alt="" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"></div>
+          <button @click="closeModal()" class="absolute top-5 right-5 bg-white/20 text-white rounded-full p-2.5 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-colors">
+            <i class="ph ph-x text-xl"></i>
+          </button>
+        </div>
+
+        <div class="p-6 flex-1 overflow-y-auto bg-luxury-base">
+          <h2 class="font-serif text-3xl font-bold text-luxury-ink mb-3" x-text="currentSpot.name"></h2>
+          <p class="text-sm text-luxury-ink/80 mb-8 leading-loose tracking-wide" x-text="currentSpot.desc"></p>
+          
+          <button @click="taxiMode = true" class="w-full mb-6 flex items-center justify-center gap-2 bg-luxury-ink text-white font-medium tracking-widest text-xs uppercase py-4 px-4 rounded-xl shadow-md hover:bg-luxury-ink/90 active:scale-95 transition-all">
+            <i class="ph ph-taxi text-lg"></i>
+            <span>Show to Taxi Driver</span>
+          </button>
+
+          <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase mb-3 flex items-center gap-2"><i class="ph ph-map-pin text-luxury-accent"></i> Location Map</h3>
+          <div class="rounded-xl overflow-hidden shadow-inner h-48 bg-gray-200 border border-luxury-border relative">
+            <iframe width="100%" height="100%" frameborder="0" style="border:0" 
+              :src="'https://maps.google.com/maps?q=' + encodeURIComponent(currentSpot.mapQuery) + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute inset-0 bg-white z-50 flex flex-col justify-between p-6" x-show="taxiMode" style="display: none;" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="translate-y-10 opacity-0" x-transition:enter-end="translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        
+        <div class="flex justify-end">
+          <button @click="taxiMode = false" class="text-luxury-ink/50 hover:text-luxury-ink p-2">
+            <i class="ph ph-x text-3xl"></i>
+          </button>
+        </div>
+
+        <div class="text-center space-y-6 -mt-10">
+          <p class="text-luxury-accent font-bold tracking-widest text-sm uppercase">Please take me here</p>
+          <h2 class="text-6xl font-bold text-luxury-ink leading-tight" x-text="currentSpot.mapQuery |
+
+| currentSpot.name"></h2>
+          <p class="text-luxury-ink/60 text-lg">請帶我到這裡，謝謝。</p>
+        </div>
+
+        <div class="space-y-4 mb-4">
+          <button @click="navigator.clipboard.writeText(currentSpot.mapQuery |
+
+| currentSpot.name); copied = true; setTimeout(() => copied = false, 2000)" 
+                  class="w-full flex items-center justify-center gap-2 bg-luxury-base border-2 border-luxury-accent/50 text-luxury-ink font-bold tracking-widest text-sm py-4 rounded-xl active:bg-luxury-accent/20 transition-all">
+            <i class="ph" :class="copied? 'ph-check text-green-600' : 'ph-copy'"></i>
+            <span x-text="copied? 'COPIED TO CLIPBOARD' : 'COPY ADDRESS (UBER/APP)'"></span>
+          </button>
+          
+          <div class="grid grid-cols-2 gap-3 text-center text-xs font-medium text-luxury-ink/70">
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p class="mb-1">Receipt, please</p>
+              <p class="font-bold text-luxury-ink text-sm">請給我收據</p>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <p class="mb-1">Stop here</p>
+              <p class="font-bold text-luxury-ink text-sm">停這裡</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    window.firebaseDb = null;
+    // Service Worker Registration for PWA (Offline Support)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // Create an empty sw.js in your project root to enable full offline caching
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.log('SW registration intended for production offline use.');
+        });
+      });
+    }
+  </script>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getDatabase, ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHENSt3ZfgPpQkqVkrnGDP8HFpSOrSsxw",
+      authDomain: "taiwan-trip-8efe0.firebaseapp.com",
+      databaseURL: "https://taiwan-trip-8efe0-default-rtdb.firebaseio.com",
+      projectId: "taiwan-trip-8efe0",
+      storageBucket: "taiwan-trip-8efe0.firebasestorage.app",
+      messagingSenderId: "300493256338",
+      appId: "1:300493256338:web:dbc4f088feb74c92a3584b",
+      measurementId: "G-KBXEDT6Z1L"
+    };
+
+    if (firebaseConfig.apiKey!== "YOUR_API_KEY") {
+      const app = initializeApp(firebaseConfig);
+      window.firebaseDb = getDatabase(app);
+      window.firebaseRefs = { ref, onValue, push, remove };
+      window.dispatchEvent(new CustomEvent('firebase-ready'));
+    }
+  </script>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('tripApp', () => ({
+        activeTab: 0,
+        isModalOpen: false,
+        currentSpot: {},
+        itinerary:
+          },
+          {
+            date: "4/3 (Fri)", area: "Jiufen",
+            routeUrl: "https://www.google.com/maps/dir/?api=1&origin=八徳東寧路口&destination=基山街+九份&waypoints=九份老街%7C阿妹茶楼%7C豎崎路%7C九份景観台",
+            spots:
+          },
+          {
+            date: "4/4 (Sat)", area: "Taipei",
+            routeUrl: "https://www.google.com/maps/dir/?api=1&origin=国立故宮博物院&destination=士林夜市&waypoints=国民革命忠烈祠",
+            spots:
+          },
+          {
+            date: "4/5 (Sun)", area: "Tamsui",
+            routeUrl: "https://www.google.com/maps/dir/?api=1&origin=MRT淡水駅&destination=雲門劇場&waypoints=淡水老街%7C淡水礼拝堂%7C正宗阿給老店",
+            spots:
+          },
+          {
+            date: "4/6 (Mon)", area: "Taipei",
+            routeUrl: "https://www.google.com/maps/dir/?api=1&origin=台北101&destination=迪化街&waypoints=国立中正紀念堂%7C中華民国総統府%7C剝皮寮歷史街区%7C艋舺龍山寺%7C西門紅楼",
+            spots:
+          },
+          {
+            date: "4/7 (Tue)", area: "Taoyuan",
+            routeUrl: "https://www.google.com/maps/search/?api=1&query=台湾桃園国際空港",
+            spots:
+          },
+          { date: "Info", area: "Information", isInfo: true },
+          { date: "Tools", area: "Utilities", isTools: true }
+        ],
+        async init() {
+          for (let i = 0; i < this.itinerary.length; i++) {
+            if (this.itinerary[i].isInfo |
+
+| this.itinerary[i].isHello |
+| this.itinerary[i].isTools) continue;
+            for (let j = 0; j < this.itinerary[i].spots.length; j++) {
+              let spot = this.itinerary[i].spots[j];
+              if (!spot.transit && spot.wikiQuery) {
+                this.fetchWikiImage(spot.wikiQuery).then(url => {
+                  if (url) {
+                    this.itinerary[i].spots[j].image = url;
+                  }
+                });
+              }
+            }
+          }
+        },
+        async fetchWikiImage(query) {
+          try {
+            const url = `https://ja.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&format=json&pithumbsize=800&origin=*`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages);
+            if (pageId!== "-1" && pages[pageId].thumbnail) {
+              return pages[pageId].thumbnail.source;
+            }
+            return null; 
+          } catch (e) {
+            return null;
+          }
+        },
+        openModal(spot) {
+          this.currentSpot = spot;
+          this.isModalOpen = true;
+          document.body.style.overflow = 'hidden';
+        },
+        closeModal() {
+          this.isModalOpen = false;
+          document.body.style.overflow = '';
+        }
+      }))
+
+      Alpine.data('currencyConverter', () => ({
+        rate: 4.8, 
+        twd: '',
+        jpy: '',
+        async fetchRate() {
+          try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
+            const data = await res.json();
+            this.rate = data.rates.JPY;
+            if(this.twd!== '') this.calcJpy();
+          } catch (e) {
+            console.log('為替レートの取得に失敗したため、目安のレートを使用します。');
+            if(this.twd!== '') this.calcJpy();
+          }
+        },
+        calcJpy() {
+          if (this.twd === '' |
+
+| this.twd === null) {
+            this.jpy = '';
+            return;
+          }
+          this.jpy = Math.floor(this.twd * this.rate);
+        },
+        calcTwd() {
+          if (this.jpy === '' |
+
+| this.jpy === null) {
+            this.twd = '';
+            return;
+          }
+          this.twd = Math.floor(this.jpy / this.rate);
+        }
+      }))
+
+      Alpine.data('memoBoard', () => ({
+        memos:,
+        newMemo: '',
+        isSynced: false,
+        init() {
+          const loadMemos = () => {
+            if (!window.firebaseDb) return;
+            const { ref, onValue } = window.firebaseRefs;
+            const memosRef = ref(window.firebaseDb, 'trip_memos');
+            
+            onValue(memosRef, (snapshot) => {
+              this.isSynced = true;
+              const data = snapshot.val();
+              if (data) {
+                this.memos = Object.entries(data).map(([key, value]) => ({
+                  id: key,
+                 ...value
+                })).sort((a, b) => b.timestamp - a.timestamp);
+              } else {
+                this.memos =;
+              }
+            });
+          };
+
+          if (window.firebaseDb) {
+            loadMemos();
+          } else {
+            window.addEventListener('firebase-ready', loadMemos);
+            this.memos = JSON.parse(localStorage.getItem('trip_memos_backup') |
+
+| '');
+          }
+        },
+        addMemo() {
+          if (this.newMemo.trim() === '') return;
+          const now = new Date();
+          const dateString = now.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          
+          if (window.firebaseDb) {
+            const { ref, push } = window.firebaseRefs;
+            const memosRef = ref(window.firebaseDb, 'trip_memos');
+            push(memosRef, {
+              text: this.newMemo,
+              date: dateString,
+              timestamp: Date.now()
+            });
+          } else {
+            this.memos.unshift({ id: Date.now(), text: this.newMemo, date: dateString, timestamp: Date.now() });
+            localStorage.setItem('trip_memos_backup', JSON.stringify(this.memos));
+          }
+          this.newMemo = '';
+        },
+        deleteMemo(id) {
+          if (window.firebaseDb) {
+            const { ref, remove } = window.firebaseRefs;
+            const memoRef = ref(window.firebaseDb, `trip_memos/${id}`);
+            remove(memoRef);
+          } else {
+            this.memos = this.memos.filter(m => m.id!== id);
+            localStorage.setItem('trip_memos_backup', JSON.stringify(this.memos));
+          }
+        }
+      }))
+    })
+  </script>
+</body>
+</html>
