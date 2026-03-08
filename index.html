@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TAIWAN EXCLUSIVE JOURNEY</title>
-  
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Taiwan Luxury Trip","short_name":"Taiwan Trip","display":"standalone","background_color":"#EFE9E1","theme_color":"#1A292F","start_url":"."}'>
+  <title>THE TAIWAN JOURNEY</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;600&family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
   
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -20,172 +20,195 @@
       theme: {
         extend: {
           fontFamily: {
-            sans:,
-            serif:,
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+            serif: ['"Noto Serif JP"', 'serif'],
           },
           colors: {
-            luxury: {
-              base: '#EFE9E1',     // Warm Ivory/Cream
-              ink: '#1A292F',      // Deep Navy/Charcoal
-              accent: '#DEBDA6',   // Warm Taupe
-              surface: 'rgba(255, 255, 255, 0.45)', // Glass base
-              border: 'rgba(255, 255, 255, 0.4)'
+            brand: {
+              black: '#121212',
+              dark: '#2A2A2A',
+              gray: '#757575',
+              light: '#F7F7F7',
+              gold: '#D4AF37', // シャンパンゴールド
+              goldLight: '#FBF8F1',
             }
-          },
-          boxShadow: {
-            'glass': '0 8px 32px rgba(0, 0, 0, 0.04)',
           }
         }
       }
     }
   </script>
   <style>
-    body { -webkit-tap-highlight-color: transparent; }
-   .no-scrollbar::-webkit-scrollbar { display: none; }
-   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    body { 
+      background-color: #FAFAFA; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-   .timeline-line::before {
+    /* エレガントなタイムラインの線 */
+    .timeline-line::before {
       content: '';
       position: absolute;
-      top: 24px; bottom: -24px; left: 24px;
+      top: 28px; bottom: -28px; left: 28px;
       width: 1px;
-      background: #DEBDA6;
-      opacity: 0.5;
+      background: #E0E0E0;
       z-index: 0;
     }
-   .timeline-item:last-child.timeline-line::before { display: none; }
+    .timeline-item:last-child .timeline-line::before { display: none; }
     
-   .timeline-dash::before {
+    .timeline-dash::before {
       content: '';
       position: absolute;
-      top: 0; bottom: 0; left: 24px;
+      top: 0; bottom: 0; left: 28px;
       width: 1px;
-      background-image: linear-gradient(to bottom, #DEBDA6 50%, transparent 50%);
+      background-image: linear-gradient(to bottom, #BDBDBD 50%, transparent 50%);
       background-size: 1px 8px;
-      opacity: 0.6;
       z-index: 0;
     }
 
-   .checklist-input:checked + span {
-      text-decoration: line-through;
-      color: #9ca3af;
+    /* チェックボックスの高級感カスタマイズ */
+    .checklist-input {
+      appearance: none;
+      width: 1.25rem; height: 1.25rem;
+      border: 1px solid #9E9E9E;
+      border-radius: 2px;
+      display: inline-flex; justify-content: center; items-center;
+      transition: all 0.2s;
+    }
+    .checklist-input:checked {
+      background-color: #D4AF37; border-color: #D4AF37;
+    }
+    .checklist-input:checked::after {
+      content: '✓'; color: white; font-size: 0.85rem;
+    }
+    .checklist-input:checked + span {
+      text-decoration: line-through; color: #9E9E9E;
     }
   </style>
 </head>
-<body class="bg-luxury-base text-luxury-ink font-sans antialiased selection:bg-luxury-accent selection:text-white" x-data="tripApp()">
+<body class="text-brand-dark font-sans antialiased" x-data="tripApp()">
 
-  <header class="bg-white/40 backdrop-blur-xl px-6 py-4 sticky top-0 z-30 flex justify-center items-center gap-2 border-b border-white/50 shadow-sm">
-    <h1 class="text-xl font-serif font-bold tracking-widest text-luxury-ink text-center uppercase">Taiwan Itinerary</h1>
+  <header class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 flex justify-center items-center py-4 shadow-sm">
+    <div class="text-center">
+      <h1 class="text-xl font-serif font-bold tracking-[0.2em] text-brand-black">THE TAIWAN JOURNEY</h1>
+    </div>
   </header>
 
-  <nav class="bg-white/30 backdrop-blur-md sticky top-[61px] z-20 flex overflow-x-auto no-scrollbar border-b border-luxury-border shadow-sm">
+  <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-[61px] z-30 flex overflow-x-auto no-scrollbar">
     <template x-for="(day, index) in itinerary" :key="index">
       <button 
         @click="activeTab = index; window.scrollTo({top: 0, behavior: 'smooth'})" 
-        class="flex-none min-w-[80px] px-2 py-3 text-center transition-all duration-500 relative border-b-2"
-        :class="activeTab === index? 'text-luxury-ink border-luxury-ink' : 'text-luxury-ink/40 border-transparent'">
+        class="flex-none min-w-[80px] px-3 py-4 text-center transition-all duration-500 relative"
+        :class="activeTab === index ? 'text-brand-gold' : 'text-brand-gray hover:text-brand-dark'">
+        
         <template x-if="day.isHello">
-          <div>
-            <i class="ph ph-sparkle text-xl mb-1"></i>
-            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Top</div>
+          <div class="flex flex-col items-center">
+            <span class="text-[10px] tracking-widest font-serif">WELCOME</span>
           </div>
         </template>
         <template x-if="day.isInfo">
-          <div>
-            <i class="ph ph-info text-xl mb-1"></i>
-            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Info</div>
+          <div class="flex flex-col items-center">
+            <span class="text-[10px] tracking-widest font-serif">INFO</span>
           </div>
         </template>
         <template x-if="day.isTools">
-          <div>
-            <i class="ph ph-toolbox text-xl mb-1"></i>
-            <div class="text-[10px] font-bold mt-0.5 uppercase tracking-widest">Tools</div>
+          <div class="flex flex-col items-center">
+            <span class="text-[10px] tracking-widest font-serif">TOOLS</span>
           </div>
         </template>
-        <template x-if="!day.isHello &&!day.isInfo &&!day.isTools">
-          <div>
-            <div class="font-serif text-lg font-bold leading-tight" x-text="day.date"></div>
-            <div class="text-[10px] font-bold mt-0.5 tracking-wider" x-text="day.area"></div>
+        <template x-if="!day.isHello && !day.isInfo && !day.isTools">
+          <div class="flex flex-col items-center">
+            <div class="font-serif text-sm font-bold tracking-widest" x-text="day.title"></div>
+            <div class="text-[9px] mt-1 tracking-widest text-brand-gray" x-text="day.date"></div>
           </div>
         </template>
+        <div class="absolute bottom-0 left-1/4 right-1/4 h-[2px] bg-brand-gold transition-transform duration-300"
+             :class="activeTab === index ? 'scale-x-100' : 'scale-x-0'"></div>
       </button>
     </template>
   </nav>
 
-  <main class="p-5 pb-32 max-w-lg mx-auto min-h-screen">
+  <main class="pb-32 max-w-lg mx-auto min-h-screen">
     
-    <template x-if="itinerary.isHello">
-      <div class="h-[75vh] flex flex-col items-center justify-center text-center px-4 relative rounded-3xl overflow-hidden shadow-2xl mt-2 border border-white/20">
-        
-        <div x-data="{ slide: 0 }" x-init="setInterval(() => { slide = slide === 0? 1 : 0 }, 4000)" class="absolute inset-0 w-full h-full">
+    <template x-if="itinerary[activeTab].isHello">
+      <div class="animate-fade-in relative h-[75vh] mx-4 mt-6 rounded-sm overflow-hidden shadow-2xl">
+        <div x-data="{ slide: 0 }" x-init="setInterval(() => { slide = slide === 0 ? 1 : 0 }, 4000)" class="absolute inset-0 w-full h-full">
           <img src="https://www.veltra.com/jp/guide/wp-content/uploads/2023/10/pixta_88320344_M.jpg" 
-               class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out" 
-               :class="slide === 0? 'opacity-100' : 'opacity-0'">
+               class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform" 
+               :class="slide === 0 ? 'opacity-100 scale-105' : 'opacity-0 scale-100'">
           <img src="https://www.arukikata.co.jp/wp-content/uploads/20230209132106f3c208001920.jpg" 
-               class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out" 
-               :class="slide === 1? 'opacity-100' : 'opacity-0'">
-          <div class="absolute inset-0 bg-gradient-to-b from-luxury-ink/30 via-luxury-ink/40 to-luxury-ink/90 z-0"></div>
+               class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform" 
+               :class="slide === 1 ? 'opacity-100 scale-105' : 'opacity-0 scale-100'">
+               
+          <div class="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-20">
+            <div class="w-1.5 h-1.5 rounded-full transition-colors duration-500" :class="slide === 0 ? 'bg-brand-gold' : 'bg-white/40'"></div>
+            <div class="w-1.5 h-1.5 rounded-full transition-colors duration-500" :class="slide === 1 ? 'bg-brand-gold' : 'bg-white/40'"></div>
+          </div>
         </div>
         
-        <div class="relative z-10 text-white flex flex-col items-center w-full px-4">
-          <p class="text-xs tracking-[0.4em] mb-4 font-light text-luxury-accent">EXCLUSIVE JOURNEY</p>
-          <h2 class="text-5xl font-serif font-bold mb-6 tracking-widest drop-shadow-md">TAIWAN</h2>
-          <div class="h-px w-12 bg-luxury-accent mb-6"></div>
-          <p class="text-sm tracking-[0.2em] mb-12 font-light">2026.4.2 - 4.7</p>
+        <div class="absolute inset-0 bg-gradient-to-b from-brand-black/30 via-brand-black/20 to-brand-black/90 z-0"></div>
+        
+        <div class="relative z-10 text-white flex flex-col items-center justify-end h-full pb-20 px-4 text-center">
+          <p class="text-xs tracking-[0.4em] mb-3 text-brand-gold font-serif">EXCLUSIVE EXPERIENCE</p>
+          <h2 class="text-4xl font-serif font-bold mb-6 tracking-[0.15em] drop-shadow-md">TAIWAN</h2>
+          <div class="h-[1px] w-12 bg-brand-gold mb-6"></div>
+          <p class="text-sm tracking-widest mb-12 font-light">APR 2 - APR 7, 2026</p>
           
-          <p class="text-[10px] mb-12 font-medium tracking-[0.2em] bg-black/30 px-6 py-3 rounded-full backdrop-blur-md border border-white/10 uppercase">
-            Naoto Sugimura & Tomohiro Eguchi
+          <p class="text-[10px] mb-8 font-light tracking-[0.2em] border border-white/30 px-6 py-3 bg-brand-black/20 backdrop-blur-sm">
+            NAOTO SUGIMURA<br><span class="inline-block mt-1">&</span> TOMOHIRO EGUCHI
           </p>
-          
-          <button @click="activeTab = 1; window.scrollTo({top: 0, behavior: 'smooth'})" 
-                  class="flex items-center gap-3 bg-white text-luxury-ink font-serif italic tracking-wider px-8 py-3.5 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform">
-            <span>Explore Itinerary</span>
-            <i class="ph ph-arrow-right text-lg"></i>
-          </button>
         </div>
       </div>
     </template>
 
-    <template x-if="!itinerary.isInfo &&!itinerary.isHello &&!itinerary.isTools">
-      <div class="animate-fade-in">
-        <div class="mb-6 flex justify-end" x-show="itinerary.routeUrl" x-transition>
-          <a :href="itinerary.routeUrl" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full shadow-glass bg-luxury-surface backdrop-blur-md border border-luxury-border cursor-pointer active:scale-95 transition-transform text-luxury-ink hover:bg-white/60">
-            <i class="ph ph-map-trifold text-lg"></i>
-            <span class="text-xs font-bold tracking-wider">Open Route Map</span>
+    <template x-if="!itinerary[activeTab].isInfo && !itinerary[activeTab].isHello && !itinerary[activeTab].isTools">
+      <div class="pt-6 px-4 animate-fade-in">
+        
+        <div class="flex justify-between items-end mb-10" data-aos="fade-up">
+          <div>
+            <h2 class="font-serif text-3xl text-brand-black tracking-wider" x-text="itinerary[activeTab].title"></h2>
+            <p class="text-xs text-brand-gold tracking-[0.2em] mt-2 uppercase" x-text="itinerary[activeTab].area"></p>
+          </div>
+          <a x-show="itinerary[activeTab].routeUrl" :href="itinerary[activeTab].routeUrl" target="_blank" rel="noopener noreferrer"
+             class="flex items-center gap-1.5 px-4 py-2 border border-brand-gray text-brand-gray hover:bg-brand-gray hover:text-white transition-colors text-[10px] tracking-wider uppercase font-bold">
+            <i class="ph ph-map-trifold text-sm"></i> MAP
           </a>
         </div>
 
-        <div class="relative mt-4">
-          <template x-for="(spot, spotIndex) in itinerary.spots" :key="spotIndex">
+        <div class="relative mt-2">
+          <template x-for="(spot, spotIndex) in itinerary[activeTab].spots" :key="spotIndex">
             <div>
               <template x-if="spot.transit">
-                <div class="relative pl-16 py-4">
+                <div class="relative pl-16 py-4" data-aos="fade-in">
                   <div class="timeline-dash"></div>
-                  <div class="text-[10px] font-bold tracking-widest text-luxury-ink/60 bg-luxury-base inline-block px-2 rounded-full relative z-10 py-1">
-                    <i class="ph ph-arrows-down-up align-middle mr-1"></i> <span x-text="spot.transit"></span>
+                  <div class="text-[10px] font-bold text-brand-gray tracking-wider bg-brand-light inline-block px-3 py-1 rounded-sm relative z-10 border border-gray-200">
+                    <i class="ph ph-car align-middle mr-1"></i> <span x-text="spot.transit"></span>
                   </div>
                 </div>
               </template>
 
-              <div x-show="!spot.transit" class="timeline-item relative pl-16 mb-6">
-                <div class="timeline-line absolute left-0 top-0 bottom-0 w-12 flex flex-col items-center">
-                  <div class="w-12 text-right pr-3 pt-1.5">
-                    <span class="text-[11px] font-bold text-luxury-ink/70 tracking-widest" x-text="spot.time |
-
-| ''"></span>
+              <div x-show="!spot.transit" class="timeline-item relative pl-16 mb-8" data-aos="fade-up" :data-aos-delay="spotIndex * 50">
+                <div class="timeline-line absolute left-0 top-0 bottom-0 w-14 flex flex-col items-center">
+                  <div class="w-14 text-right pr-4 pt-1.5">
+                    <span class="text-xs font-serif font-bold text-brand-black tracking-wider" x-text="spot.time || ' '"></span>
                   </div>
-                  <div class="w-2.5 h-2.5 rounded-full bg-luxury-accent absolute top-2.5 left-[23px] z-10 shadow-sm ring-4 ring-luxury-base"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-brand-gold absolute top-2.5 left-[23.5px] z-10 shadow-[0_0_0_4px_#FAFAFA]"></div>
                 </div>
 
-                <div @click="openModal(spot)" class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 shadow-glass cursor-pointer active:scale-95 transition-all hover:bg-white/50">
-                  <h3 class="font-serif text-xl font-bold mb-2 text-luxury-ink" x-text="spot.name"></h3>
-                  <p class="text-xs text-luxury-ink/80 leading-relaxed line-clamp-2 tracking-wide" x-text="spot.desc"></p>
-                  
-                  <div class="mt-4 h-32 rounded-xl overflow-hidden relative bg-gray-200">
-                    <img :src="spot.image" class="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105" alt="">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end justify-end p-3">
-                      <span class="text-white text-[10px] tracking-widest font-medium uppercase drop-shadow-md">Tap to View <i class="ph ph-arrow-right inline-block ml-1"></i></span>
+                <div @click="openModal(spot)" class="group cursor-pointer">
+                  <div class="bg-white rounded-sm overflow-hidden shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 transition-transform duration-300 transform group-active:scale-[0.98]">
+                    <div class="h-32 relative overflow-hidden bg-gray-100">
+                      <img :src="spot.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="">
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+                      <div class="absolute bottom-3 left-4 right-4">
+                        <h3 class="font-serif text-lg text-white drop-shadow-md leading-tight" x-text="spot.name"></h3>
+                      </div>
+                    </div>
+                    <div class="p-4">
+                      <p class="text-[11px] text-brand-gray leading-relaxed line-clamp-2 font-light" x-text="spot.desc"></p>
+                      <div class="mt-3 text-right">
+                        <span class="text-[9px] text-brand-gold tracking-[0.1em] font-bold">DISCOVER <i class="ph ph-arrow-right align-middle"></i></span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -196,153 +219,224 @@
       </div>
     </template>
 
-    <template x-if="itinerary.isInfo">
-      <div class="space-y-6 mt-2 animate-fade-in">
+    <template x-if="itinerary[activeTab].isInfo">
+      <div class="pt-6 px-4 space-y-8 animate-fade-in pb-10">
         
-        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden">
-          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center gap-2">
-            <i class="ph ph-buildings text-lg text-luxury-accent"></i>
-            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-sm uppercase">Hotel</h3>
+        <div class="text-center mb-8" data-aos="fade-up">
+          <h2 class="font-serif text-2xl text-brand-black tracking-[0.15em]">INFORMATION</h2>
+          <div class="h-px w-8 bg-brand-gold mx-auto mt-4"></div>
+        </div>
+
+        <div class="bg-white shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-gray-100 p-6" data-aos="fade-up">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-brand-goldLight flex items-center justify-center text-brand-gold">
+              <i class="ph ph-buildings text-lg"></i>
+            </div>
+            <h3 class="font-serif text-lg text-brand-black tracking-widest">ACCOMMODATION</h3>
           </div>
-          <div class="p-6">
-            <p class="text-[11px] text-luxury-ink/60 mb-2 tracking-wide uppercase">2026.4.2 - 4.7 (5 Nights) / Classic Twin</p>
-            <h4 class="font-serif font-bold text-2xl text-luxury-ink mb-6">Guide Hotel Taipei Bade</h4>
+          
+          <div class="space-y-4">
+            <div>
+              <p class="text-[10px] text-brand-gray uppercase tracking-widest mb-1">Hotel Name</p>
+              <h4 class="font-bold text-brand-dark text-base">ガイドホテル台北八徳館</h4>
+              <p class="text-xs text-brand-gray mt-1 font-light">2026.4.2 - 4.7 (5 Nights) / Classic Twin</p>
+            </div>
             
-            <div class="bg-white/50 border border-luxury-border rounded-xl p-5 relative mb-6">
-              <p class="text-xl font-bold text-luxury-ink text-center tracking-widest mb-1">承携行旅 台北八徳館</p>
-              <p class="text-xs text-luxury-ink/70 text-center tracking-wider">台北市松山區八德路四段16号</p>
+            <div class="bg-gray-50 border border-gray-200 p-4 mt-4 relative">
+              <span class="text-[9px] text-brand-gray uppercase tracking-widest mb-2 block">For Taxi Driver</span>
+              <p class="text-xl font-bold text-brand-black text-center tracking-widest font-serif">承携行旅 台北八徳館</p>
+              <p class="text-xs text-brand-gray text-center mt-2">台北市松山區八德路四段16号</p>
             </div>
 
             <a href="https://www.google.com/maps/search/?api=1&query=承携行旅+台北八徳館" target="_blank" rel="noopener noreferrer" 
-               class="flex justify-center items-center gap-2 bg-luxury-ink text-white font-medium tracking-widest text-xs py-3.5 px-4 rounded-full shadow-md hover:bg-luxury-ink/90 transition-colors w-full active:scale-95">
-              <i class="ph ph-map-pin text-lg"></i>
-              <span>View on Google Map</span>
+               class="block text-center bg-brand-black hover:bg-brand-dark text-white text-xs font-bold py-3.5 tracking-widest transition-colors w-full mt-4">
+              OPEN IN MAPS
             </a>
           </div>
         </div>
 
-        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden">
-          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center gap-2">
-            <i class="ph ph-airplane-tilt text-lg text-luxury-accent"></i>
-            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-sm uppercase">Flight</h3>
+        <div class="bg-white shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-gray-100 p-6" data-aos="fade-up">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-brand-goldLight flex items-center justify-center text-brand-gold">
+              <i class="ph ph-airplane-tilt text-lg"></i>
+            </div>
+            <h3 class="font-serif text-lg text-brand-black tracking-widest">FLIGHT</h3>
           </div>
-          <div class="p-6 space-y-6">
-            <p class="text-[10px] font-bold text-luxury-ink tracking-widest uppercase bg-white/40 p-2.5 rounded-lg border border-luxury-border text-center">
-              <i class="ph ph-users align-middle mr-1"></i> Sugimura N. / Eguchi T.
-            </p>
-            
-            <div class="relative pl-4 border-l border-luxury-accent">
-              <p class="text-[10px] font-bold text-luxury-accent tracking-widest mb-2 uppercase">Departure • Apr 2 (Thu) • Scoot TR877</p>
-              <div class="flex items-center gap-4">
+
+          <p class="text-[10px] font-bold text-brand-gray tracking-widest border-b border-gray-100 pb-3 mb-4">
+            PASSENGERS: N. SUGIMURA / T. EGUCHI
+          </p>
+          
+          <div class="space-y-6">
+            <div class="relative pl-4 border-l border-brand-gold">
+              <p class="text-[10px] text-brand-gold tracking-widest mb-2">DEPARTURE - APR 2 | SCOOT TR877</p>
+              <div class="flex items-center justify-between">
                 <div>
-                  <p class="text-2xl font-serif font-bold text-luxury-ink">12:30</p>
-                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">NRT T1</p>
+                  <p class="text-2xl font-light font-serif">12:30</p>
+                  <p class="text-[10px] text-brand-gray tracking-wider">NRT (T1)</p>
                 </div>
-                <div class="flex-1 border-b border-dashed border-luxury-ink/30 relative">
-                  <i class="ph ph-airplane text-luxury-ink/40 absolute -top-2.5 right-1/2 translate-x-1/2"></i>
+                <div class="flex-1 px-4 text-center text-gray-300">
+                  <div class="h-px bg-gray-200 w-full relative">
+                    <i class="ph ph-airplane text-brand-gold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2"></i>
+                  </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-2xl font-serif font-bold text-luxury-ink">15:10</p>
-                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">TPE T1</p>
+                  <p class="text-2xl font-light font-serif">15:10</p>
+                  <p class="text-[10px] text-brand-gray tracking-wider">TPE (T1)</p>
                 </div>
               </div>
             </div>
 
-            <div class="relative pl-4 border-l border-luxury-accent">
-              <p class="text-[10px] font-bold text-luxury-accent tracking-widest mb-2 uppercase">Return • Apr 7 (Tue) • Scoot TR874</p>
-              <div class="flex items-center gap-4">
+            <div class="relative pl-4 border-l border-brand-black">
+              <p class="text-[10px] text-brand-black tracking-widest mb-2">RETURN - APR 7 | SCOOT TR874</p>
+              <div class="flex items-center justify-between">
                 <div>
-                  <p class="text-2xl font-serif font-bold text-luxury-ink">15:30</p>
-                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">TPE T1</p>
+                  <p class="text-2xl font-light font-serif">15:30</p>
+                  <p class="text-[10px] text-brand-gray tracking-wider">TPE (T1)</p>
                 </div>
-                <div class="flex-1 border-b border-dashed border-luxury-ink/30 relative">
-                  <i class="ph ph-airplane text-luxury-ink/40 absolute -top-2.5 right-1/2 translate-x-1/2"></i>
+                <div class="flex-1 px-4 text-center text-gray-300">
+                  <div class="h-px bg-gray-200 w-full relative">
+                    <i class="ph ph-airplane text-brand-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2"></i>
+                  </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-2xl font-serif font-bold text-luxury-ink">20:00</p>
-                  <p class="text-[10px] text-luxury-ink/60 uppercase tracking-wider">NRT T1</p>
+                  <p class="text-2xl font-light font-serif">20:00</p>
+                  <p class="text-[10px] text-brand-gray tracking-wider">NRT (T1)</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <div class="bg-white shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-gray-100 p-6" data-aos="fade-up">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-brand-goldLight flex items-center justify-center text-brand-gold">
+              <i class="ph ph-check text-lg"></i>
+            </div>
+            <h3 class="font-serif text-lg text-brand-black tracking-widest">PACKING LIST</h3>
+          </div>
+          
+          <div class="space-y-4">
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">パスポート（有効期限要確認）</span>
+            </label>
+            <div class="h-px w-full bg-gray-50"></div>
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">航空券（Eチケット控え）</span>
+            </label>
+            <div class="h-px w-full bg-gray-50"></div>
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">現金（TWD）＆ クレジットカード</span>
+            </label>
+            <div class="h-px w-full bg-gray-50"></div>
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">SIMカード / eSIM / Wi-Fi</span>
+            </label>
+            <div class="h-px w-full bg-gray-50"></div>
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">モバイルバッテリー</span>
+            </label>
+            <div class="h-px w-full bg-gray-50"></div>
+            <label class="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" class="checklist-input">
+              <span class="text-xs text-brand-dark group-hover:text-brand-black transition-colors">常備薬・ウェットティッシュ</span>
+            </label>
+          </div>
+        </div>
+
       </div>
     </template>
 
-    <template x-if="itinerary.isTools">
-      <div class="space-y-5 mt-2 animate-fade-in">
+    <template x-if="itinerary[activeTab].isTools">
+      <div class="pt-6 px-4 space-y-6 animate-fade-in pb-10">
         
-        <div class="grid grid-cols-2 gap-4">
+        <div class="text-center mb-8" data-aos="fade-up">
+          <h2 class="font-serif text-2xl text-brand-black tracking-[0.15em]">ESSENTIAL TOOLS</h2>
+          <div class="h-px w-8 bg-brand-gold mx-auto mt-4"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4" data-aos="fade-up">
           <a href="https://tenki.jp/world/5/88/58968/" target="_blank" rel="noopener noreferrer" 
-             class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 flex flex-col items-center justify-center gap-3 shadow-glass hover:bg-white/50 transition-colors active:scale-95 text-center">
-            <i class="ph ph-cloud-sun text-3xl text-luxury-accent"></i>
-            <span class="text-[11px] font-bold tracking-widest uppercase text-luxury-ink">Weather<br>(Taipei)</span>
+             class="bg-white border border-gray-100 p-5 flex flex-col items-center justify-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-95 group">
+            <i class="ph ph-sun text-2xl text-brand-gray group-hover:text-brand-gold transition-colors"></i>
+            <span class="text-[10px] font-bold text-brand-dark tracking-widest text-center">WEATHER</span>
           </a>
           <a href="https://www.deepl.com/ja/translator#ja/zh-hant/" target="_blank" rel="noopener noreferrer" 
-             class="bg-luxury-surface backdrop-blur-xl border border-luxury-border rounded-2xl p-5 flex flex-col items-center justify-center gap-3 shadow-glass hover:bg-white/50 transition-colors active:scale-95 text-center">
-            <i class="ph ph-translate text-3xl text-luxury-accent"></i>
-            <span class="text-[11px] font-bold tracking-widest uppercase text-luxury-ink">Translator<br>(DeepL)</span>
+             class="bg-white border border-gray-100 p-5 flex flex-col items-center justify-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-95 group">
+            <i class="ph ph-translate text-2xl text-brand-gray group-hover:text-brand-gold transition-colors"></i>
+            <span class="text-[10px] font-bold text-brand-dark tracking-widest text-center">TRANSLATOR</span>
           </a>
         </div>
 
-        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden" x-data="currencyConverter()" x-init="fetchRate()">
-          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex justify-between items-center">
-            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase"><i class="ph ph-currency-circle-dollar mr-1 align-text-bottom"></i> Exchange</h3>
-            <span class="text-[10px] font-medium tracking-wider text-luxury-ink/60" x-text="'1 TWD = ' + rate.toFixed(2) + ' JPY'"></span>
+        <div class="bg-white shadow-sm border border-gray-100 p-6" x-data="currencyConverter()" x-init="fetchRate()" data-aos="fade-up">
+          <div class="flex justify-between items-center mb-5">
+            <h3 class="font-serif text-sm tracking-widest text-brand-black">EXCHANGE RATE</h3>
+            <span class="text-[10px] text-brand-gray tracking-wider" x-text="'1 TWD = ¥' + rate.toFixed(2)"></span>
           </div>
           
-          <div class="p-5 flex flex-col gap-4">
+          <div class="flex flex-col gap-3">
             <div class="relative w-full">
               <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <span class="text-luxury-ink/50 font-bold text-lg">NT$</span>
+                <span class="text-brand-gray font-serif text-sm">NT$</span>
               </div>
-              <input type="number" x-model="twd" @input="calcJpy()" class="bg-white/60 border border-luxury-border text-luxury-ink text-xl rounded-xl focus:ring-luxury-accent focus:border-luxury-accent block w-full pl-16 py-3 pr-4 text-right font-serif font-bold outline-none transition-all" placeholder="0">
+              <input type="number" x-model="twd" @input="calcJpy()" class="bg-gray-50 border-none text-brand-black text-xl w-full pl-14 py-4 pr-4 text-right font-light focus:ring-1 focus:ring-brand-gold" placeholder="0">
             </div>
             
-            <div class="flex justify-center text-luxury-accent -my-1">
-              <i class="ph ph-arrows-down-up text-xl"></i>
+            <div class="flex justify-center text-brand-gold py-1">
+              <i class="ph ph-arrows-down-up text-lg"></i>
             </div>
             
             <div class="relative w-full">
               <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <span class="text-luxury-ink/50 font-bold text-lg">¥</span>
+                <span class="text-brand-gray font-serif text-sm">¥</span>
               </div>
-              <input type="number" x-model="jpy" @input="calcTwd()" class="bg-white/60 border border-luxury-border text-luxury-ink text-xl rounded-xl focus:ring-luxury-accent focus:border-luxury-accent block w-full pl-12 py-3 pr-4 text-right font-serif font-bold outline-none transition-all" placeholder="0">
+              <input type="number" x-model="jpy" @input="calcTwd()" class="bg-gray-50 border-none text-brand-black text-xl w-full pl-12 py-4 pr-4 text-right font-light focus:ring-1 focus:ring-brand-gold" placeholder="0">
             </div>
           </div>
         </div>
 
-        <div class="bg-luxury-surface backdrop-blur-xl rounded-2xl shadow-glass border border-luxury-border overflow-hidden" x-data="memoBoard()">
-          <div class="bg-white/40 px-5 py-3 border-b border-luxury-border flex items-center justify-between">
-            <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase flex items-center gap-1.5">
-              <i class="ph ph-note-pencil text-lg text-luxury-accent"></i> Shared Notes
-            </h3>
-            <span class="flex h-2 w-2 relative">
-              <span x-show="isSynced" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-accent opacity-75"></span>
-              <span x-show="isSynced" class="relative inline-flex rounded-full h-2 w-2 bg-luxury-accent"></span>
-              <span x-show="!isSynced" class="relative inline-flex rounded-full h-2 w-2 bg-gray-400"></span>
-            </span>
+        <div class="bg-white shadow-sm border border-gray-100 p-6" data-aos="fade-up">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-serif text-sm tracking-widest text-brand-black">MRT MAP</h3>
+            <a href="https://m.metro.taipei/jp/routemap.asp" target="_blank" class="text-[9px] text-brand-gold tracking-widest">OFFICIAL PDF <i class="ph ph-arrow-square-out align-middle"></i></a>
           </div>
-          <div class="p-5">
-            <div class="flex gap-2 mb-5">
-              <textarea x-model="newMemo" rows="2" class="flex-1 bg-white/60 border border-luxury-border text-sm text-luxury-ink rounded-xl p-3 outline-none focus:border-luxury-accent transition-all" placeholder="Share thoughts or plans..."></textarea>
-              <button @click="addMemo()" class="bg-luxury-ink text-white font-medium tracking-widest text-xs uppercase px-4 rounded-xl hover:bg-luxury-ink/90 active:scale-95 transition-all">
-                Post
-              </button>
-            </div>
-            
-            <div class="space-y-3">
-              <template x-for="memo in memos" :key="memo.id">
-                <div class="bg-white/50 border border-luxury-border p-4 rounded-xl shadow-sm relative group">
-                  <p class="text-sm text-luxury-ink whitespace-pre-wrap leading-relaxed" x-text="memo.text"></p>
-                  <div class="mt-3 flex justify-between items-end">
-                    <span class="text-[9px] text-luxury-ink/50 tracking-widest uppercase" x-text="memo.date"></span>
-                    <button @click="deleteMemo(memo.id)" class="text-luxury-ink/30 hover:text-luxury-accent transition-colors">
-                      <i class="ph ph-trash text-lg"></i>
-                    </button>
-                  </div>
+          <div class="bg-gray-50 p-2 border border-gray-100">
+            <img src="https://s.skygate.co.jp/pc/tour/taiwan/images/map_subway.jpg?20230215" class="w-full mix-blend-multiply" alt="MRT路線図">
+          </div>
+        </div>
+
+        <div class="bg-white shadow-sm border border-gray-100 p-6" x-data="memoBoard()" data-aos="fade-up">
+          <div class="flex justify-between items-center mb-5">
+            <h3 class="font-serif text-sm tracking-widest text-brand-black">PRIVATE NOTES</h3>
+            <i class="ph ph-lock-key text-brand-gray text-sm" title="ローカル保存"></i>
+          </div>
+          
+          <div class="mb-5">
+            <textarea x-model="newMemo" rows="2" class="w-full bg-gray-50 border-none text-xs p-4 focus:ring-1 focus:ring-brand-gold resize-none" placeholder="Write down your thoughts..."></textarea>
+            <button @click="addMemo()" class="mt-2 w-full bg-brand-black text-white text-[10px] tracking-widest font-bold py-3 hover:bg-brand-dark transition-colors">
+              SAVE NOTE
+            </button>
+          </div>
+          
+          <div class="space-y-3">
+            <template x-for="memo in memos" :key="memo.id">
+              <div class="border-l-2 border-brand-gold pl-4 py-1 relative group">
+                <p class="text-xs text-brand-dark leading-relaxed whitespace-pre-wrap" x-text="memo.text"></p>
+                <div class="mt-2 flex justify-between items-center">
+                  <span class="text-[9px] text-brand-gray tracking-wider font-light" x-text="memo.date"></span>
+                  <button @click="deleteMemo(memo.id)" class="text-brand-gray hover:text-red-800 transition-colors">
+                    <i class="ph ph-x text-sm"></i>
+                  </button>
                 </div>
-              </template>
+              </div>
+            </template>
+            <div x-show="memos.length === 0" class="text-center text-brand-gray text-[10px] py-4 tracking-widest font-light">
+              NO NOTES YET.
             </div>
           </div>
         </div>
@@ -352,8 +446,8 @@
 
   </main>
 
-  <div x-show="isModalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-end justify-center bg-luxury-ink/60 backdrop-blur-sm" x-transition.opacity x-data="{ taxiMode: false, copied: false }">
-    <div @click.away="!taxiMode? closeModal() : null" class="bg-luxury-base w-full rounded-t-[2rem] overflow-hidden h-[85vh] flex flex-col shadow-2xl relative"
+  <div x-show="isModalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-end justify-center bg-brand-black/80 backdrop-blur-sm" x-transition.opacity>
+    <div @click.away="closeModal()" class="bg-white w-full rounded-t-xl overflow-hidden h-[85vh] flex flex-col shadow-2xl"
          x-transition:enter="transition ease-out duration-400"
          x-transition:enter-start="transform translate-y-full"
          x-transition:enter-end="transform translate-y-0"
@@ -361,152 +455,129 @@
          x-transition:leave-start="transform translate-y-0"
          x-transition:leave-end="transform translate-y-full">
       
-      <div class="flex-1 flex flex-col overflow-hidden" x-show="!taxiMode" x-transition.opacity>
-        <div class="relative h-64 bg-gray-200 shrink-0">
-          <img :src="currentSpot.image" alt="" class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"></div>
-          <button @click="closeModal()" class="absolute top-5 right-5 bg-white/20 text-white rounded-full p-2.5 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-colors">
-            <i class="ph ph-x text-xl"></i>
-          </button>
-        </div>
-
-        <div class="p-6 flex-1 overflow-y-auto bg-luxury-base">
-          <h2 class="font-serif text-3xl font-bold text-luxury-ink mb-3" x-text="currentSpot.name"></h2>
-          <p class="text-sm text-luxury-ink/80 mb-8 leading-loose tracking-wide" x-text="currentSpot.desc"></p>
-          
-          <button @click="taxiMode = true" class="w-full mb-6 flex items-center justify-center gap-2 bg-luxury-ink text-white font-medium tracking-widest text-xs uppercase py-4 px-4 rounded-xl shadow-md hover:bg-luxury-ink/90 active:scale-95 transition-all">
-            <i class="ph ph-taxi text-lg"></i>
-            <span>Show to Taxi Driver</span>
-          </button>
-
-          <h3 class="font-serif font-bold text-luxury-ink tracking-widest text-xs uppercase mb-3 flex items-center gap-2"><i class="ph ph-map-pin text-luxury-accent"></i> Location Map</h3>
-          <div class="rounded-xl overflow-hidden shadow-inner h-48 bg-gray-200 border border-luxury-border relative">
-            <iframe width="100%" height="100%" frameborder="0" style="border:0" 
-              :src="'https://maps.google.com/maps?q=' + encodeURIComponent(currentSpot.mapQuery) + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" allowfullscreen>
-            </iframe>
-          </div>
+      <div class="relative h-64 bg-brand-dark">
+        <img :src="currentSpot.image" alt="Spot Image" class="w-full h-full object-cover opacity-90">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent"></div>
+        <button @click="closeModal()" class="absolute top-5 right-5 w-8 h-8 flex items-center justify-center bg-black/40 hover:bg-black/60 transition-colors rounded-full backdrop-blur-md text-white">
+          <i class="ph ph-x text-sm"></i>
+        </button>
+        <div class="absolute bottom-5 left-6 right-6">
+          <p class="text-[9px] text-brand-gold tracking-[0.2em] mb-1 font-serif uppercase" x-text="itinerary[activeTab].area"></p>
+          <h2 class="font-serif text-2xl text-white tracking-wider drop-shadow-md" x-text="currentSpot.name"></h2>
         </div>
       </div>
 
-      <div class="absolute inset-0 bg-white z-50 flex flex-col justify-between p-6" x-show="taxiMode" style="display: none;" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="translate-y-10 opacity-0" x-transition:enter-end="translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+      <div class="p-6 flex-1 overflow-y-auto bg-brand-light">
+        <p class="text-xs text-brand-dark leading-loose mb-8 font-light tracking-wide" x-text="currentSpot.desc"></p>
         
-        <div class="flex justify-end">
-          <button @click="taxiMode = false" class="text-luxury-ink/50 hover:text-luxury-ink p-2">
-            <i class="ph ph-x text-3xl"></i>
-          </button>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1 h-4 bg-brand-gold"></div>
+          <h3 class="font-serif text-sm tracking-widest text-brand-black">LOCATION</h3>
         </div>
-
-        <div class="text-center space-y-6 -mt-10">
-          <p class="text-luxury-accent font-bold tracking-widest text-sm uppercase">Please take me here</p>
-          <h2 class="text-6xl font-bold text-luxury-ink leading-tight" x-text="currentSpot.mapQuery |
-
-| currentSpot.name"></h2>
-          <p class="text-luxury-ink/60 text-lg">請帶我到這裡，謝謝。</p>
-        </div>
-
-        <div class="space-y-4 mb-4">
-          <button @click="navigator.clipboard.writeText(currentSpot.mapQuery |
-
-| currentSpot.name); copied = true; setTimeout(() => copied = false, 2000)" 
-                  class="w-full flex items-center justify-center gap-2 bg-luxury-base border-2 border-luxury-accent/50 text-luxury-ink font-bold tracking-widest text-sm py-4 rounded-xl active:bg-luxury-accent/20 transition-all">
-            <i class="ph" :class="copied? 'ph-check text-green-600' : 'ph-copy'"></i>
-            <span x-text="copied? 'COPIED TO CLIPBOARD' : 'COPY ADDRESS (UBER/APP)'"></span>
-          </button>
-          
-          <div class="grid grid-cols-2 gap-3 text-center text-xs font-medium text-luxury-ink/70">
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p class="mb-1">Receipt, please</p>
-              <p class="font-bold text-luxury-ink text-sm">請給我收據</p>
-            </div>
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-              <p class="mb-1">Stop here</p>
-              <p class="font-bold text-luxury-ink text-sm">停這裡</p>
-            </div>
-          </div>
+        
+        <div class="rounded-sm overflow-hidden shadow-sm h-64 border border-gray-200">
+          <iframe width="100%" height="100%" frameborder="0" style="border:0" 
+            :src="'https://maps.google.com/maps?q=' + encodeURIComponent(currentSpot.mapQuery) + '&t=&z=15&ie=UTF8&iwloc=&output=embed'" allowfullscreen>
+          </iframe>
         </div>
       </div>
-
     </div>
   </div>
 
-  <script>
-    window.firebaseDb = null;
-    // Service Worker Registration for PWA (Offline Support)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        // Create an empty sw.js in your project root to enable full offline caching
-        navigator.serviceWorker.register('./sw.js').catch(err => {
-          console.log('SW registration intended for production offline use.');
-        });
-      });
-    }
-  </script>
-  
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDHENSt3ZfgPpQkqVkrnGDP8HFpSOrSsxw",
-      authDomain: "taiwan-trip-8efe0.firebaseapp.com",
-      databaseURL: "https://taiwan-trip-8efe0-default-rtdb.firebaseio.com",
-      projectId: "taiwan-trip-8efe0",
-      storageBucket: "taiwan-trip-8efe0.firebasestorage.app",
-      messagingSenderId: "300493256338",
-      appId: "1:300493256338:web:dbc4f088feb74c92a3584b",
-      measurementId: "G-KBXEDT6Z1L"
-    };
-
-    if (firebaseConfig.apiKey!== "YOUR_API_KEY") {
-      const app = initializeApp(firebaseConfig);
-      window.firebaseDb = getDatabase(app);
-      window.firebaseRefs = { ref, onValue, push, remove };
-      window.dispatchEvent(new CustomEvent('firebase-ready'));
-    }
-  </script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
     document.addEventListener('alpine:init', () => {
+      // Initialize Scroll Animation
+      AOS.init({ once: true, duration: 800, offset: 50 });
+
       Alpine.data('tripApp', () => ({
         activeTab: 0,
         isModalOpen: false,
         currentSpot: {},
-        itinerary:
+        itinerary: [
+          {
+            date: "APR 2-7", area: "TAIWAN", isHello: true, title: "WELCOME"
           },
           {
-            date: "4/3 (Fri)", area: "Jiufen",
+            date: "APR 2", area: "TAIPEI", title: "DAY 1",
+            bgClass: "", cardClass: "", borderClass: "border-brand-gray", textClass: "text-brand-dark",
+            routeUrl: "https://www.google.com/maps/dir/?api=1&origin=台湾桃園国際空港&destination=象山+台北&waypoints=松山慈祐宮%7C饒河街観光夜市",
+            spots: [
+              { time: "15:10", name: "台湾桃園国際空港", desc: "台湾の玄関口、桃園国際空港に到着。入国審査や両替を済ませ、MRT（桃園空港線）などを利用して台北市内へ向かいます。ワクワクする旅の始まりです！", mapQuery: "台湾桃園国際空港", wikiQuery: "台湾桃園国際空港", image: "https://images.unsplash.com/photo-1542308693-01bc72db7dc1?auto=format&fit=crop&w=600&q=80" },
+              { transit: "40 min" },
+              { time: "18:00", name: "松山慈祐宮", desc: "1753年に創建された、松山地区の信仰の中心となる道教寺院。精巧で色鮮やかな彫刻が施された6階建ての荘厳な建築は圧巻で、夜はライトアップされて一層神秘的になります。", mapQuery: "松山慈祐宮", image: "https://www.travel.taipei/content/images/attractions/179307/1024x768_attractions-image-cy0ivxbzg0uxjzyc3wdxng.jpg" },
+              { time: "19:00", name: "饒河街観光夜市", desc: "松山慈祐宮のすぐ隣に広がる、台北で最も歴史ある夜市の一つ。ミシュラン必比登（ビブグルマン）にも選ばれた名物「福州世祖胡椒餅」をはじめ、活気あふれる屋台グルメが目白押しです。", mapQuery: "饒河街観光夜市", wikiQuery: "饒河街観光夜市", image: "https://images.unsplash.com/photo-1574519616010-0082ea97fb37?auto=format&fit=crop&w=600&q=80" },
+              { time: "21:00", name: "象山", desc: "台北101を中心とした大パノラマを一望できる絶好のビュースポット。整備された階段を20〜30分ほど登る必要がありますが、頂上から見る息を呑むような美しい夜景は、その疲れを吹き飛ばしてくれます。", mapQuery: "象山 台北", image: "https://www.veltra.com/jp/guide/wp-content/uploads/2023/10/pixta_76216113_M.jpg" }
+            ]
+          },
+          {
+            date: "APR 3", area: "JIUFEN", title: "DAY 2",
             routeUrl: "https://www.google.com/maps/dir/?api=1&origin=八徳東寧路口&destination=基山街+九份&waypoints=九份老街%7C阿妹茶楼%7C豎崎路%7C九份景観台",
-            spots:
+            spots: [
+              { time: "08:00", name: "八徳東寧路口", desc: "台北市内から九份へ向かうバスの乗車地点。ここから約70分ほどバスに揺られ、徐々に山道を登りながら、ノスタルジックな風景が広がる九份エリアへと向かいます。", mapQuery: "八徳東寧路口", wikiQuery: "台北市", image: "https://images.unsplash.com/photo-1520638067885-f20ee4baf5dc?auto=format&fit=crop&w=600&q=80" },
+              { transit: "71 min" },
+              { time: "09:50", name: "九份老街", desc: "かつて金鉱の街として栄えた九份のメインエリア。細く入り組んだ路地に赤提灯が灯り、レトロな商店やカフェが立ち並ぶ、どこか懐かしく幻想的な雰囲気が漂う空間です。", mapQuery: "九份老街", image: "https://jp.hshsharehouse.com/wp-content/uploads/2025/04/20250407173316_0_b31f7f.jpg" },
+              { time: "11:00", name: "九份の茶房", desc: "絶景を見下ろしながら本格的な台湾茶を楽しめる名物スポット。代表的な「阿妹茶楼」や「九份茶坊」など、ノスタルジックな建築のテラス席で、ゆっくりとお茶を淹れる贅沢な時間を過ごせます。", mapQuery: "阿妹茶楼", image: "https://imagel.sekainavi.com/images/templates/TAIPEI/1001744/7c2632c3955ba4c9_S.jpg" },
+              { time: "13:00", name: "賢崎路", desc: "九份のシンボルとも言える、急勾配の長い石段が続く小道。両脇には赤提灯が連なり、まるで映画のセットに迷い込んだような、九份で最もフォトジェニックな景観が広がっています。", mapQuery: "豎崎路", image: "https://i0.wp.com/lade.jp/wp-content/uploads/2015/03/IMG_0053.jpg?w=800&ssl=1" },
+              { time: "14:30", name: "九份景観台", desc: "九份の山肌から、基隆湾の美しい海と周囲の山々をパノラマで見渡せる展望スポット。天気が良ければ、青い海と空、そして夕暮れ時にはドラマチックな夕景を楽しむことができます。", mapQuery: "九份景観台", image: "https://blog-static.kkday.com/ja/blog/wp-content/uploads/pixta_114460767_M.jpg" },
+              { time: "16:00", name: "基山街", desc: "九份の入り口から続く、最も賑やかなアーケード商店街。名物のタロイモ団子「芋圓」や、草餅などのローカルスイーツ、ユニークなお土産屋さんがひしめき合い、食べ歩きに最適です。", mapQuery: "基山街 九份", image: "https://cdn.4travel.jp/img/thumbnails/imk/tips_pict/19/77/68/650x450_19776873.jpg?updated_at=1725031723" }
+            ]
           },
           {
-            date: "4/4 (Sat)", area: "Taipei",
+            date: "APR 4", area: "TAIPEI", title: "DAY 3",
             routeUrl: "https://www.google.com/maps/dir/?api=1&origin=国立故宮博物院&destination=士林夜市&waypoints=国民革命忠烈祠",
-            spots:
+            spots: [
+              { time: "10:00", name: "国立故宮博物院", desc: "約70万点にも及ぶ歴代中国皇帝の至宝を収蔵する、世界四大博物館の一つ。有名な「翠玉白菜」や「肉形石」など、精巧で歴史的価値の高い美術工芸品をじっくりと堪能できます。", mapQuery: "国立故宮博物院", wikiQuery: "国立故宮博物院", image: "https://images.unsplash.com/photo-1590494056345-d85c54ce2813?auto=format&fit=crop&w=600&q=80" },
+              { time: "14:00", name: "忠烈祠", desc: "辛亥革命などで命を落とした約33万人の英霊を祀る広大な祠。大門と大殿を守る衛兵たちの、一糸乱れぬ動きと銃剣を扱う見事な「衛兵交代式」は、厳かで必見の儀式です。", mapQuery: "国民革命忠烈祠", wikiQuery: "国民革命忠烈祠", image: "https://images.unsplash.com/photo-1588661794770-0081d092eac4?auto=format&fit=crop&w=600&q=80" },
+              { time: "18:00", name: "士林夜市", desc: "台北で最大規模と知名度を誇る巨大なナイトマーケット。顔より大きいフライドチキン「大鶏排」やB級グルメから、ファッション雑貨、ゲーム屋台まで、台湾の夜の熱気を存分に味わえます。", mapQuery: "士林夜市", wikiQuery: "士林夜市", image: "https://images.unsplash.com/photo-1574519616010-0082ea97fb37?auto=format&fit=crop&w=600&q=80" }
+            ]
           },
           {
-            date: "4/5 (Sun)", area: "Tamsui",
+            date: "APR 5", area: "TAMSUI", title: "DAY 4",
             routeUrl: "https://www.google.com/maps/dir/?api=1&origin=MRT淡水駅&destination=雲門劇場&waypoints=淡水老街%7C淡水礼拝堂%7C正宗阿給老店",
-            spots:
+            spots: [
+              { time: "10:00", name: "淡水駅", desc: "台北市内からMRT淡水信義線に乗って約40分で到着する、水辺の美しい街・淡水への玄関口。駅を出るとすぐに淡水河の開放的な風景が広がり、リゾート気分が高まります。", mapQuery: "MRT淡水駅", wikiQuery: "淡水駅", image: "https://images.unsplash.com/photo-1520638067885-f20ee4baf5dc?auto=format&fit=crop&w=600&q=80" },
+              { transit: "40 min" },
+              { time: "11:00", name: "淡水老街", desc: "淡水河沿いに続く、心地よい川風を感じられる遊歩道と商店街。海鮮の揚げ物や名物の鉄蛋（黒く煮込まれた硬い卵）、巨大なソフトクリームなどを食べ歩きしながら散策を楽しめます。", mapQuery: "淡水老街", image: "https://www.travel.taipei/content/images/attractions/430669/1024x768_attractions-image-ipkhsqnbgkkyoehrzgvnyg.jpg" },
+              { time: "12:30", name: "淡水礼拝堂", desc: "1933年に建てられた、ゴシック様式の美しい赤レンガ造りの長老派教会。ステンドグラスや高くそびえる鐘楼が異国情緒を漂わせ、淡水の歴史的な風景のアクセントになっています。", mapQuery: "淡水礼拝堂", image: "https://cdn.4travel.jp/img/thumbnails/imk/tips_pict/19/98/79/650x450_19987988.jpg?updated_at=1763256705" },
+              { time: "13:30", name: "正宗阿給老店", desc: "油揚げの中に春雨を詰め、魚のすり身で塞いで特製甘辛ソースをかけた淡水発祥のローカルフード「阿給（アゲ）」の超人気老舗店。地元の人々にも愛される素朴な味わいです。", mapQuery: "正宗阿給老店", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/a8/ec/12/caption.jpg?w=800&h=500&s=1" },
+              { time: "15:00", name: "紅毛城", desc: "17世紀にスペイン人によって建造され、その後オランダ人やイギリス人に引き継がれた台湾最古級の要塞建築。美しい赤レンガの洋館と、高台から見下ろす淡水河の景色が魅力です。", mapQuery: "紅毛城", image: "https://res.klook.com/image/upload/w_500,h_313,c_fill,q_85/activities/axzmqc4ghnaazprkl67h.jpg" },
+              { time: "16:30", name: "雲門劇場", desc: "国際的に活躍する台湾のコンテンポラリーダンス舞踊団「雲門舞集」の拠点。緑豊かな自然と見事に調和した、銅葺き屋根とガラス張りの現代建築は芸術的な美しさです。", mapQuery: "雲門劇場", image: "https://architecture-tour.com/image/world-taiwan-cloud-gate-theater_image1.jpg" }
+            ]
           },
           {
-            date: "4/6 (Mon)", area: "Taipei",
+            date: "APR 6", area: "TAIPEI", title: "DAY 5",
             routeUrl: "https://www.google.com/maps/dir/?api=1&origin=台北101&destination=迪化街&waypoints=国立中正紀念堂%7C中華民国総統府%7C剝皮寮歷史街区%7C艋舺龍山寺%7C西門紅楼",
-            spots:
+            spots: [
+              { time: "09:30", name: "台北101", desc: "高さ508メートル、かつて世界一の高さを誇った台湾のランドマークタワー。竹をモチーフにした縁起の良いデザインの超高層ビルで、展望台からは台北の街並みを360度見渡せます。", mapQuery: "台北101", image: "https://www.veltra.com/jp/guide/wp-content/uploads/2023/11/pixta_84090214_M.jpg" },
+              { time: "11:30", name: "国立中正紀念堂", desc: "初代総統・蒋介石を顕彰して建てられた、白亜の壁と青い八角形の瓦屋根が美しい壮大な記念堂。広大な広場や美しい庭園が併設されており、ここでも1時間ごとの衛兵交代式が見学できます。", mapQuery: "国立中正紀念堂", wikiQuery: "中正紀念堂", image: "https://images.unsplash.com/photo-1600109918231-158a9e6af8c0?auto=format&fit=crop&w=600&q=80" },
+              { time: "13:30", name: "中華民国総統府", desc: "1919年の日本統治時代に建設された、赤レンガと白い石のコントラストが美しいルネサンス様式の歴史的建築。現在も台湾の政治の中枢として機能しており、外観だけでも見応えがあります。", mapQuery: "中華民国総統府", image: "https://taiwan-shugakuryoko.jp/wp/wp-content/uploads/2020/10/24c4d88643d95ce6a416919ab49c74e2.jpg" },
+              { time: "15:00", name: "剝皮寮歷史街区", desc: "清朝時代から日本統治時代にかけての、アーケード状の古い赤レンガの街並みが修復・保存されている歴史エリア。ノスタルジックな雰囲気が漂い、フォトジェニックなスポットとして人気です。", mapQuery: "剝皮寮歷史街区", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/13/6f/8d/caption.jpg?w=1400&h=800&s=1" },
+              { time: "16:00", name: "龍山寺", desc: "1738年に創建された、台北で最も古く格式高い寺院。仏教と道教の神様が数多く同居し、学業、恋愛、仕事などあらゆる願い事にご利益があると言われる、台湾最強のパワースポットです。", mapQuery: "龍山寺", wikiQuery: "艋舺龍山寺", image: "https://images.unsplash.com/photo-1600109918231-158a9e6af8c0?auto=format&fit=crop&w=600&q=80" },
+              { time: "17:30", name: "西門町 (西門紅楼/16工房)", desc: "「台北の原宿」とも呼ばれる、若者文化やサブカルチャーの発信地。歴史的建造物である八角形の「西門紅楼」には、台湾の若手クリエイターが手がける雑貨店などが集まる「16工房」が入っています。", mapQuery: "西門紅楼", wikiQuery: "西門町", image: "https://images.unsplash.com/photo-1583335513577-224b12745305?auto=format&fit=crop&w=600&q=80" },
+              { time: "19:00", name: "迪化街", desc: "19世紀後半から問屋街として栄え、美しいバロック調の建築が連なるレトロなストリート。漢方薬、ドライフルーツ、からすみなどを扱う老舗が並び、お土産探しや街歩きにぴったりのエリアです。", mapQuery: "迪化街", wikiQuery: "迪化街", image: "https://images.unsplash.com/photo-1577908993883-7c30a476dbb3?auto=format&fit=crop&w=600&q=80" }
+            ]
           },
           {
-            date: "4/7 (Tue)", area: "Taoyuan",
+            date: "APR 7", area: "TAOYUAN", title: "DAY 6",
             routeUrl: "https://www.google.com/maps/search/?api=1&query=台湾桃園国際空港",
-            spots:
+            spots: [
+              { time: "10:00", name: "空港観光", desc: "出発前の時間を活用して、広大な桃園国際空港を散策。免税店での最後のお買い物や、台湾グルメを楽しめる充実したフードコート、モダンなラウンジなどでゆったりとお過ごしいただけます。", mapQuery: "台湾桃園国際空港", image: "https://culturize.org/media/wp-content/uploads/2023/12/e1c504d46c997a9778d3f42e021f20f0.jpeg" },
+              { transit: "Airport Move" },
+              { time: "15:30", name: "台湾桃園国際空港", desc: "楽しかった台湾旅行もいよいよ終わりです。入国時とは違うターミナルの景色を眺めながら、素晴らしい旅の思い出とともに帰国の途に就きます。お気をつけて！", mapQuery: "台湾桃園国際空港", wikiQuery: "台湾桃園国際空港", image: "https://images.unsplash.com/photo-1542308693-01bc72db7dc1?auto=format&fit=crop&w=600&q=80" }
+            ]
           },
-          { date: "Info", area: "Information", isInfo: true },
-          { date: "Tools", area: "Utilities", isTools: true }
+          {
+            date: "BASICS", area: "INFO", isInfo: true, title: "INFO"
+          },
+          {
+            date: "UTILITIES", area: "TOOLS", isTools: true, title: "TOOLS"
+          }
         ],
         async init() {
           for (let i = 0; i < this.itinerary.length; i++) {
-            if (this.itinerary[i].isInfo |
-
-| this.itinerary[i].isHello |
-| this.itinerary[i].isTools) continue;
+            if (this.itinerary[i].isInfo || this.itinerary[i].isHello || this.itinerary[i].isTools) continue;
             for (let j = 0; j < this.itinerary[i].spots.length; j++) {
               let spot = this.itinerary[i].spots[j];
               if (!spot.transit && spot.wikiQuery) {
@@ -525,8 +596,8 @@
             const res = await fetch(url);
             const data = await res.json();
             const pages = data.query.pages;
-            const pageId = Object.keys(pages);
-            if (pageId!== "-1" && pages[pageId].thumbnail) {
+            const pageId = Object.keys(pages)[0];
+            if (pageId !== "-1" && pages[pageId].thumbnail) {
               return pages[pageId].thumbnail.source;
             }
             return null; 
@@ -545,6 +616,7 @@
         }
       }))
 
+      // 通貨コンバーター (ロジック維持)
       Alpine.data('currencyConverter', () => ({
         rate: 4.8, 
         twd: '',
@@ -554,25 +626,21 @@
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
             const data = await res.json();
             this.rate = data.rates.JPY;
-            if(this.twd!== '') this.calcJpy();
+            if(this.twd !== '') this.calcJpy();
           } catch (e) {
-            console.log('為替レートの取得に失敗したため、目安のレートを使用します。');
-            if(this.twd!== '') this.calcJpy();
+            console.log('Using default rate.');
+            if(this.twd !== '') this.calcJpy();
           }
         },
         calcJpy() {
-          if (this.twd === '' |
-
-| this.twd === null) {
+          if (this.twd === '' || this.twd === null) {
             this.jpy = '';
             return;
           }
           this.jpy = Math.floor(this.twd * this.rate);
         },
         calcTwd() {
-          if (this.jpy === '' |
-
-| this.jpy === null) {
+          if (this.jpy === '' || this.jpy === null) {
             this.twd = '';
             return;
           }
@@ -580,67 +648,22 @@
         }
       }))
 
+      // メモ帳 (ローカル保存版)
       Alpine.data('memoBoard', () => ({
-        memos:,
+        memos: JSON.parse(localStorage.getItem('trip_memos_private') || '[]'),
         newMemo: '',
-        isSynced: false,
-        init() {
-          const loadMemos = () => {
-            if (!window.firebaseDb) return;
-            const { ref, onValue } = window.firebaseRefs;
-            const memosRef = ref(window.firebaseDb, 'trip_memos');
-            
-            onValue(memosRef, (snapshot) => {
-              this.isSynced = true;
-              const data = snapshot.val();
-              if (data) {
-                this.memos = Object.entries(data).map(([key, value]) => ({
-                  id: key,
-                 ...value
-                })).sort((a, b) => b.timestamp - a.timestamp);
-              } else {
-                this.memos =;
-              }
-            });
-          };
-
-          if (window.firebaseDb) {
-            loadMemos();
-          } else {
-            window.addEventListener('firebase-ready', loadMemos);
-            this.memos = JSON.parse(localStorage.getItem('trip_memos_backup') |
-
-| '');
-          }
-        },
         addMemo() {
           if (this.newMemo.trim() === '') return;
           const now = new Date();
-          const dateString = now.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          const dateString = now.toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
           
-          if (window.firebaseDb) {
-            const { ref, push } = window.firebaseRefs;
-            const memosRef = ref(window.firebaseDb, 'trip_memos');
-            push(memosRef, {
-              text: this.newMemo,
-              date: dateString,
-              timestamp: Date.now()
-            });
-          } else {
-            this.memos.unshift({ id: Date.now(), text: this.newMemo, date: dateString, timestamp: Date.now() });
-            localStorage.setItem('trip_memos_backup', JSON.stringify(this.memos));
-          }
+          this.memos.unshift({ id: Date.now(), text: this.newMemo, date: dateString });
+          localStorage.setItem('trip_memos_private', JSON.stringify(this.memos));
           this.newMemo = '';
         },
         deleteMemo(id) {
-          if (window.firebaseDb) {
-            const { ref, remove } = window.firebaseRefs;
-            const memoRef = ref(window.firebaseDb, `trip_memos/${id}`);
-            remove(memoRef);
-          } else {
-            this.memos = this.memos.filter(m => m.id!== id);
-            localStorage.setItem('trip_memos_backup', JSON.stringify(this.memos));
-          }
+          this.memos = this.memos.filter(m => m.id !== id);
+          localStorage.setItem('trip_memos_private', JSON.stringify(this.memos));
         }
       }))
     })
