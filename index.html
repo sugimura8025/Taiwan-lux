@@ -29,7 +29,7 @@
               dark: '#2A2A2A',
               gray: '#757575',
               light: '#F7F7F7',
-              gold: '#D4AF37', // シャンパンゴールド
+              gold: '#D4AF37', 
               goldLight: '#FBF8F1',
             }
           }
@@ -45,7 +45,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* エレガントなタイムラインの線 */
     .timeline-line::before {
       content: '';
       position: absolute;
@@ -66,7 +65,6 @@
       z-index: 0;
     }
 
-    /* チェックボックスの高級感カスタマイズ */
     .checklist-input {
       appearance: none;
       width: 1.25rem; height: 1.25rem;
@@ -131,7 +129,7 @@
   <main class="pb-32 max-w-lg mx-auto min-h-screen">
     
     <template x-if="itinerary[activeTab].isHello">
-      <div class="animate-fade-in relative h-[75vh] mx-4 mt-6 rounded-sm overflow-hidden shadow-2xl">
+      <div class="relative h-[75vh] mx-4 mt-6 rounded-sm overflow-hidden shadow-2xl">
         <div x-data="{ slide: 0 }" x-init="setInterval(() => { slide = slide === 0 ? 1 : 0 }, 4000)" class="absolute inset-0 w-full h-full">
           <img src="https://www.veltra.com/jp/guide/wp-content/uploads/2023/10/pixta_88320344_M.jpg" 
                class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform" 
@@ -162,7 +160,7 @@
     </template>
 
     <template x-if="!itinerary[activeTab].isInfo && !itinerary[activeTab].isHello && !itinerary[activeTab].isTools">
-      <div class="pt-6 px-4 animate-fade-in">
+      <div class="pt-6 px-4">
         
         <div class="flex justify-between items-end mb-10" data-aos="fade-up">
           <div>
@@ -187,7 +185,7 @@
                 </div>
               </template>
 
-              <div x-show="!spot.transit" class="timeline-item relative pl-16 mb-8" data-aos="fade-up" :data-aos-delay="spotIndex * 50">
+              <div x-show="!spot.transit" class="timeline-item relative pl-16 mb-8" data-aos="fade-up">
                 <div class="timeline-line absolute left-0 top-0 bottom-0 w-14 flex flex-col items-center">
                   <div class="w-14 text-right pr-4 pt-1.5">
                     <span class="text-xs font-serif font-bold text-brand-black tracking-wider" x-text="spot.time || ' '"></span>
@@ -199,12 +197,9 @@
                   <div class="bg-white rounded-sm overflow-hidden shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 transition-transform duration-300 transform group-active:scale-[0.98]">
                     <div class="h-32 relative overflow-hidden bg-gray-100">
                       <img :src="spot.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="">
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
-                      <div class="absolute bottom-3 left-4 right-4">
-                        <h3 class="font-serif text-lg text-white drop-shadow-md leading-tight" x-text="spot.name"></h3>
-                      </div>
                     </div>
                     <div class="p-4">
+                      <h3 class="font-serif text-lg font-bold text-brand-black mb-1.5" x-text="spot.name"></h3>
                       <p class="text-[11px] text-brand-gray leading-relaxed line-clamp-2 font-light" x-text="spot.desc"></p>
                       <div class="mt-3 text-right">
                         <span class="text-[9px] text-brand-gold tracking-[0.1em] font-bold">DISCOVER <i class="ph ph-arrow-right align-middle"></i></span>
@@ -220,7 +215,7 @@
     </template>
 
     <template x-if="itinerary[activeTab].isInfo">
-      <div class="pt-6 px-4 space-y-8 animate-fade-in pb-10">
+      <div class="pt-6 px-4 space-y-8 pb-10">
         
         <div class="text-center mb-8" data-aos="fade-up">
           <h2 class="font-serif text-2xl text-brand-black tracking-[0.15em]">INFORMATION</h2>
@@ -353,7 +348,7 @@
     </template>
 
     <template x-if="itinerary[activeTab].isTools">
-      <div class="pt-6 px-4 space-y-6 animate-fade-in pb-10">
+      <div class="pt-6 px-4 space-y-6 pb-10">
         
         <div class="text-center mb-8" data-aos="fade-up">
           <h2 class="font-serif text-2xl text-brand-black tracking-[0.15em]">ESSENTIAL TOOLS</h2>
@@ -488,7 +483,6 @@
 
   <script>
     document.addEventListener('alpine:init', () => {
-      // Initialize Scroll Animation
       AOS.init({ once: true, duration: 800, offset: 50 });
 
       Alpine.data('tripApp', () => ({
@@ -496,9 +490,7 @@
         isModalOpen: false,
         currentSpot: {},
         itinerary: [
-          {
-            date: "APR 2-7", area: "TAIWAN", isHello: true, title: "WELCOME"
-          },
+          { date: "APR 2-7", area: "TAIWAN", isHello: true, title: "WELCOME" },
           {
             date: "APR 2", area: "TAIPEI", title: "DAY 1",
             bgClass: "", cardClass: "", borderClass: "border-brand-gray", textClass: "text-brand-dark",
@@ -515,7 +507,7 @@
             date: "APR 3", area: "JIUFEN", title: "DAY 2",
             routeUrl: "https://www.google.com/maps/dir/?api=1&origin=八徳東寧路口&destination=基山街+九份&waypoints=九份老街%7C阿妹茶楼%7C豎崎路%7C九份景観台",
             spots: [
-              { time: "08:00", name: "八徳東寧路口", desc: "台北市内から九份へ向かうバスの乗車地点。ここから約70分ほどバスに揺られ、徐々に山道を登りながら、ノスタルジックな風景が広がる九份エリアへと向かいます。", mapQuery: "八徳東寧路口", wikiQuery: "台北市", image: "https://images.unsplash.com/photo-1520638067885-f20ee4baf5dc?auto=format&fit=crop&w=600&q=80" },
+              { time: "08:00", name: "八徳東寧路口", desc: "台北市内から九份へ向かうバスの乗車地点。ここから約70分ほどバスに揺られ、徐々に山道を登りながら、ノスタルジックな風景が広がる九份エリアへと向かいます。", mapQuery: "八徳東寧路口", image: "https://ak-d.tripcdn.com/images/0225o12000a6qrz0m9758_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F" },
               { transit: "71 min" },
               { time: "09:50", name: "九份老街", desc: "かつて金鉱の街として栄えた九份のメインエリア。細く入り組んだ路地に赤提灯が灯り、レトロな商店やカフェが立ち並ぶ、どこか懐かしく幻想的な雰囲気が漂う空間です。", mapQuery: "九份老街", image: "https://jp.hshsharehouse.com/wp-content/uploads/2025/04/20250407173316_0_b31f7f.jpg" },
               { time: "11:00", name: "九份の茶房", desc: "絶景を見下ろしながら本格的な台湾茶を楽しめる名物スポット。代表的な「阿妹茶楼」や「九份茶坊」など、ノスタルジックな建築のテラス席で、ゆっくりとお茶を淹れる贅沢な時間を過ごせます。", mapQuery: "阿妹茶楼", image: "https://imagel.sekainavi.com/images/templates/TAIPEI/1001744/7c2632c3955ba4c9_S.jpg" },
@@ -568,12 +560,8 @@
               { time: "15:30", name: "台湾桃園国際空港", desc: "楽しかった台湾旅行もいよいよ終わりです。入国時とは違うターミナルの景色を眺めながら、素晴らしい旅の思い出とともに帰国の途に就きます。お気をつけて！", mapQuery: "台湾桃園国際空港", wikiQuery: "台湾桃園国際空港", image: "https://images.unsplash.com/photo-1542308693-01bc72db7dc1?auto=format&fit=crop&w=600&q=80" }
             ]
           },
-          {
-            date: "BASICS", area: "INFO", isInfo: true, title: "INFO"
-          },
-          {
-            date: "UTILITIES", area: "TOOLS", isTools: true, title: "TOOLS"
-          }
+          { date: "BASICS", area: "INFO", isInfo: true, title: "INFO" },
+          { date: "UTILITIES", area: "TOOLS", isTools: true, title: "TOOLS" }
         ],
         async init() {
           for (let i = 0; i < this.itinerary.length; i++) {
@@ -582,9 +570,7 @@
               let spot = this.itinerary[i].spots[j];
               if (!spot.transit && spot.wikiQuery) {
                 this.fetchWikiImage(spot.wikiQuery).then(url => {
-                  if (url) {
-                    this.itinerary[i].spots[j].image = url;
-                  }
+                  if (url) this.itinerary[i].spots[j].image = url;
                 });
               }
             }
@@ -592,72 +578,41 @@
         },
         async fetchWikiImage(query) {
           try {
-            const url = `https://ja.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&format=json&pithumbsize=800&origin=*`;
-            const res = await fetch(url);
+            const res = await fetch(`https://ja.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&format=json&pithumbsize=800&origin=*`);
             const data = await res.json();
-            const pages = data.query.pages;
-            const pageId = Object.keys(pages)[0];
-            if (pageId !== "-1" && pages[pageId].thumbnail) {
-              return pages[pageId].thumbnail.source;
-            }
-            return null; 
-          } catch (e) {
-            return null;
-          }
+            const pageId = Object.keys(data.query.pages)[0];
+            return (pageId !== "-1" && data.query.pages[pageId].thumbnail) ? data.query.pages[pageId].thumbnail.source : null;
+          } catch (e) { return null; }
         },
         openModal(spot) {
-          this.currentSpot = spot;
-          this.isModalOpen = true;
-          document.body.style.overflow = 'hidden';
+          this.currentSpot = spot; this.isModalOpen = true; document.body.style.overflow = 'hidden';
         },
         closeModal() {
-          this.isModalOpen = false;
-          document.body.style.overflow = '';
+          this.isModalOpen = false; document.body.style.overflow = '';
         }
       }))
 
-      // 通貨コンバーター (ロジック維持)
       Alpine.data('currencyConverter', () => ({
-        rate: 4.8, 
-        twd: '',
-        jpy: '',
+        rate: 4.8, twd: '', jpy: '',
         async fetchRate() {
           try {
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
             const data = await res.json();
             this.rate = data.rates.JPY;
             if(this.twd !== '') this.calcJpy();
-          } catch (e) {
-            console.log('Using default rate.');
-            if(this.twd !== '') this.calcJpy();
-          }
+          } catch (e) { if(this.twd !== '') this.calcJpy(); }
         },
-        calcJpy() {
-          if (this.twd === '' || this.twd === null) {
-            this.jpy = '';
-            return;
-          }
-          this.jpy = Math.floor(this.twd * this.rate);
-        },
-        calcTwd() {
-          if (this.jpy === '' || this.jpy === null) {
-            this.twd = '';
-            return;
-          }
-          this.twd = Math.floor(this.jpy / this.rate);
-        }
+        calcJpy() { this.jpy = this.twd ? Math.floor(this.twd * this.rate) : ''; },
+        calcTwd() { this.twd = this.jpy ? Math.floor(this.jpy / this.rate) : ''; }
       }))
 
-      // メモ帳 (ローカル保存版)
       Alpine.data('memoBoard', () => ({
         memos: JSON.parse(localStorage.getItem('trip_memos_private') || '[]'),
         newMemo: '',
         addMemo() {
-          if (this.newMemo.trim() === '') return;
-          const now = new Date();
-          const dateString = now.toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-          
-          this.memos.unshift({ id: Date.now(), text: this.newMemo, date: dateString });
+          if (!this.newMemo.trim()) return;
+          const d = new Date().toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          this.memos.unshift({ id: Date.now(), text: this.newMemo, date: d });
           localStorage.setItem('trip_memos_private', JSON.stringify(this.memos));
           this.newMemo = '';
         },
